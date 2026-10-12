@@ -25,6 +25,15 @@ cat > "$test_dir/check.vim" <<'VIM'
 call assert_equal('', v:errmsg, '配置启动无错误')
 call assert_equal(1, &number)
 call assert_equal(0, &relativenumber)
+call ToggleLineNumbers()
+call assert_equal(0, &number)
+setlocal relativenumber
+call ToggleLineNumbers()
+call assert_equal(0, &relativenumber)
+call ToggleLineNumbers()
+call assert_equal(1, &number)
+execute 'source ' . fnameescape($MYVIMRC)
+call assert_equal(1, len(filter(split(execute('autocmd VimSpecIndent FileType'), "\n"), 'v:val =~ "noexpandtab"')))
 call assert_equal(11, len(g:plugs))
 call assert_equal($VIM_SPEC_HOME . '/.vim/backup//', &backupdir)
 new example.py
@@ -33,6 +42,12 @@ call assert_equal(4, &shiftwidth)
 new example.json
 call assert_equal('json', &filetype)
 call assert_equal(2, &shiftwidth)
+new example.tsx
+call assert_equal('typescriptreact', &filetype)
+call assert_equal(2, &shiftwidth)
+new example.go
+call assert_equal(0, &expandtab)
+call assert_equal(4, &shiftwidth)
 execute 'edit ' . fnameescape($VIM_SPEC_HOME . '/sample file.txt')
 call setline(1, 'first')
 write

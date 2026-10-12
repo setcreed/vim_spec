@@ -51,11 +51,28 @@ link_file() {
 link_file "$repo_dir/vendor/plug.vim" "$target_home/.vim/autoload/plug.vim" plug.vim
 link_file "$repo_dir/vimrc" "$target_home/.vimrc" vimrc
 
+log_dir="$target_home/.vim/install-logs"
+mkdir -p "$log_dir"
+chmod 700 "$log_dir"
+log_file="$(umask 077; mktemp "$log_dir/install-$(date +%Y%m%d-%H%M%S).XXXXXX")"
+echo "安装日志：$log_file"
+run_vim() {
+    if VIM_SPEC_PLUGIN_LOG="$log_file.plugins" vim -V1 -N -i NONE -u "$target_home/.vimrc" -es "$@" > "$log_file" 2>&1; then
+        return
+    fi
+    echo "Vim 配置或插件安装失败。完整日志：$log_file" >&2
+    tail -n 40 "$log_file" >&2
+    if [ -f "$log_file.plugins" ]; then
+        echo "插件下载详情：$log_file.plugins" >&2
+        tail -n 40 "$log_file.plugins" >&2
+    fi
+    exit 1
+}
 if [ "$skip_plugins" = true ]; then
-    vim -N -i NONE -u "$target_home/.vimrc" -es '+qa'
+    run_vim '+qa'
     echo '配置已安装；插件安装已跳过。稍后运行 bash install.sh 安装插件。'
 else
-    vim -N -i NONE -u "$target_home/.vimrc" -es \
-        '+PlugInstall --sync' -S "$repo_dir/scripts/check-plugins.vim" '+qa'
+    run_vim '+PlugInstall --sync' -S "$repo_dir/scripts/check-plugins.vim" '+qa'
     echo '配置和插件安装完成。重新打开 Vim 即可使用。'
 fi
+bash "$repo_dir/scripts/check-tools.sh"

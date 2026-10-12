@@ -6,5 +6,14 @@ for [s:name, s:plugin] in items(g:plugs)
 endfor
 if !empty(s:missing)
     echomsg '插件安装失败：' . join(s:missing, ', ')
+    if !empty($VIM_SPEC_PLUGIN_LOG)
+        for s:buffer in getbufinfo()
+            if getbufvar(s:buffer.bufnr, '&filetype') ==# 'vim-plug'
+                call writefile(getbufline(s:buffer.bufnr, 1, '$'), $VIM_SPEC_PLUGIN_LOG)
+                call setfperm($VIM_SPEC_PLUGIN_LOG, 'rw-------')
+                break
+            endif
+        endfor
+    endif
     cquit
 endif
