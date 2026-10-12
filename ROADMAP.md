@@ -2,10 +2,11 @@
 
 ## 当前状态
 
-迁移项目基线已推送至私有 GitHub 仓库。macOS／iTerm2 配置优化、项目 Prettier 优先、Go 格式化统一及安装诊断已在本地完成并验证；这些优化尚未推送，也未安装到本机真实用户配置。新 Mac 安装入口为 `bash install.sh`。
+迁移项目及 macOS／iTerm2 配置优化、项目 Prettier 优先、Go 格式化统一和安装诊断已完成验证并推送至私有 GitHub 仓库。尚未安装到本机真实用户配置。新 Mac 安装入口为 `bash install.sh`。
 
 ## 最近完成
 
+- 2026-10-12 21:20：将配置优化、安装诊断、回归测试和使用说明提交 `9383e6a` 推送至 GitHub 的 `main` 分支。
 - 2026-10-12 21:08：完成项目内 Prettier 优先与项目工作目录选择、Go 手动格式化避免重复保存钩子并统一 PATH 工具选择、安装后可选工具检查和失败日志。安装失败保留并展示 Vim 报错及插件下载详情，工具缺失不阻止基础安装。
 - 2026-10-12 20:54：补齐 README.md 中 F5／F8 的工具对照、Homebrew 安装命令、Go／goimports 区别、PATH 设置与验证方法，明确 macOS 自带 BSD ctags 不能用于 Tagbar。
 - 2026-10-12 20:53：完成终端按键等待、终端鼠标选择、空格前缀快捷键、显式系统剪贴板及行号切换优化；修复格式化路径转义和失败后重载问题，补齐 Go Tab 与 JSX／TSX 缩进，重复加载不累积自动命令。同步 iTerm2 使用和测试说明。
@@ -15,6 +16,7 @@
 
 ## 最近验证
 
+- 2026-10-12 21:20：`git ls-remote origin refs/heads/main` 核验远端提交与本地配置提交 `9383e6a` 一致。
 - 2026-10-12 21:17：提交前复核 Shell 语法、安装／格式化／诊断三个回归脚本及 `git diff --check`，全部通过。核对 README.md、AGENTS.md 与当前实现和验证入口一致，临时文件及下载插件不纳入提交。
 - 2026-10-12 21:08：安装、格式化及诊断三个回归脚本通过；覆盖两个项目模拟 Prettier 版本、无全局工具时的本地工具、全局回退、Go 单次调用与钩子恢复、工具缺失、BSD／Universal Ctags 区分、模拟断网和启动错误的原因展示。真实 vim-go 配合记录调用的工具验证 F5 一次调用、普通保存仍格式化；真实 goimports 验证 import 整理及普通保存格式化通过。Shell 语法与 `git diff --check` 通过。
 - 2026-10-12 20:54：核对 Homebrew 官方 Formula、goimports 和 Tagbar 官方说明；本机会话可找到 gofmt、goimports，未找到 black、prettier，当前 ctags 为系统 BSD 实现。仅执行只读检查，没有安装工具或修改 Shell 配置。
